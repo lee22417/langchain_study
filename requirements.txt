@@ -1,0 +1,13 @@
+streamlit
+numpy
+pandas
+openai
+fastapi
+langchain
+uvicorn
+langchain_experimental
+pymysql
+tiktoken
+unstructured
+unstructured[pdf]
+faiss-cpu
