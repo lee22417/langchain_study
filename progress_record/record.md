@@ -28,7 +28,7 @@ def translate_msg(self, ask):
 ```
 
 ```bash
-위 코드 참고,
+위 코드와 '20231229_diary_pic_png1,2' 참고
 > print(f'convert to eng : ${result}')'
 로 찍은 결과가 대부분 이런 포맷으로 들어오는데
 > convert to eng : $content='Translation: Hello'
@@ -36,4 +36,9 @@ def translate_msg(self, ask):
 > convert to eng : $content='Question: What is the current price of Bitcoin today?'
 > convert to eng : $content='Translate incoming Question to English as accurate as possible.\nQuestion: Please provide a list of stores with a rating of 4 or higher in different areas.'
 처리가 필요함.
+```
+
+```bash
+'20231229_diary_pic_png3,4' 참고
+번역 자체도 문제가 많음
 ```
