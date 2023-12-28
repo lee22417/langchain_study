@@ -43,9 +43,16 @@ class new_ai:
             
             # ai가 실행할 행동 정의 (영어번역하기)
             translate = """
-            Translate incoming Question to English as accurate as possible.
+            Translate the incoming Question into English as accurate as possible.
             Question: {question}
             """
+            
+            # ai가 실행할 행동 정의 (3개의 다른 버전의 영어로 번역해서 가장 정확한거 선택)
+            # translate = """
+            # Translate the incoming question into English in three different versions as accurate as possible 
+            # and pick the only one translated English sentence that is the most accurate.
+            # Question: {question}
+            # """
             
             # 정의한 행동 요청 (영어번역 행동 요청)
             translate_prompt = ChatPromptTemplate.from_template(translate)

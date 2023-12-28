@@ -19,13 +19,13 @@ if "msg" not in st.session_state:
 for msg in st.session_state["msg"]:
     send_msg(msg["msg"], msg['role'], False)
 
-msg = st.chat_input('대화를 입력하세요')
+msg = st.chat_input('Enter the message.')
 
 if msg:
     send_msg(msg, "human")
     # 캐쉬작업 추가
     history.add_user_message(msg)
-    with st.spinner("물어보는중"):
+    with st.spinner("Waiting for the response..."):
         # ai에 묻기
         data = ai.translate_msg(msg)
         history.add_ai_message(data)
