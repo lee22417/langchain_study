@@ -14,6 +14,9 @@ pip install -r requirements.txt
 // 가상화 생성, 활성화
 python3 -m venv env
 source env/bin/activate
+
+// streamlit local 실행
+streamlit run home.py (http://localhost:8501)
 ```
 
 ## Rreference
