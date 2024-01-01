@@ -8,13 +8,13 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts.chat import HumanMessagePromptTemplate
-import pymysql
 import pandas as pd
 import logging
 
-
+from lib.db import db_info
 # from llm.llmcallback import ChatCallbackHandler
 
+db = db_info()
 
 class new_ai:
     def __init__(self):
@@ -24,40 +24,6 @@ class new_ai:
                             callbacks=[
                                 # ChatCallbackHandler(),
                             ],)
-        # DB information
-        HOST = st.secrets["host"]
-        PORT = st.secrets["port"]
-        USER = st.secrets["user"]
-        PASSWORD = st.secrets["password"]
-        DATABASE = st.secrets["database"]
-        self.connection = pymysql.connect(
-            host=HOST,
-            port=int(PORT),
-            user=USER,
-            password=PASSWORD,
-            database=DATABASE
-        )
-
-    # DB 스키마 가져오는 함수
-    def get_schema(self, _):
-        sql = """
-            SELECT 
-                table_name, table_comment
-            FROM
-                information_schema.tables
-            WHERE
-                table_schema = 'hairdb'
-            """
-        schema = self.run_query(sql)
-        return schema
-
-    # DB 쿼리 실행 함수
-    def run_query(self, query):
-        cursor = self.connection.cursor()
-        cursor.execute(query)
-        result = cursor.fetchall()
-        cursor.close()
-        return result
 
     # Ai가 질문을 다른 언어로 변역하는 함수
     def translate_msg(self, ask, language):
@@ -105,11 +71,11 @@ class new_ai:
             # 정의한 행동 요청 (쿼리문 작성 요청)
             prompt = ChatPromptTemplate.from_template(translate)
             response = (
-                RunnablePassthrough.assign(schema=self.get_schema)
+                RunnablePassthrough.assign(schema=db.get_table_columns)
                 | prompt
                 | self.llm
             )
-
+            
             # 위에 정의한 행동 실행 (쿼리문 작성 실행)
             result = response.invoke({"question": ask})
             print(f'sql query : ${result}')
