@@ -19,6 +19,7 @@ source env/bin/activate
 streamlit run home.py (http://localhost:8501)
 ```
 
-## Rreference
+## Reference
 
 - https://github.com/chinggu88/10XAI/blob/main/.gitignore
+- https://www.gpters.org/c/llm/8-llm-langchain-db
