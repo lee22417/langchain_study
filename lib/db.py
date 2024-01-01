@@ -42,15 +42,16 @@ class db_info:
     
     # 테이블 정보 가져오는 함수
     def get_table_columns(self, _):
+        # 토큰 용량과 타협
         sql = """
             SELECT 
-                TABLE_NAME, COLUMN_NAME, COLUMN_COMMENT
+                TABLE_NAME, COLUMN_NAME, LEFT(COLUMN_COMMENT, 30)
             FROM 
                 INFORMATION_SCHEMA.COLUMNS
             WHERE 
                 TABLE_SCHEMA = 'hairdb'
         """
-        # 크기가 커서 사용 못하는 sql문
+        # 토큰 용량이 커서 사용 못하는 sql문
         # This model's maximum context length is 4097 tokens. However, your messages resulted in 6032 tokens
         # sql = """
         #     SELECT 
