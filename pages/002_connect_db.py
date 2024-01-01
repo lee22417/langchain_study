@@ -1,6 +1,6 @@
 import streamlit as st
 
-from llm.db_connect import db_connect
+from lib.db_connect import db_connect
 
 if "step" not in st.session_state:
     st.session_state["step"] = 0

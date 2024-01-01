@@ -13,7 +13,6 @@ class db_connect:
                 password=pw,
                 database=db
             )
-            # self.llm = ChatOpenAI(temperature=0.1, openai_api_key=OPENAI_API_KEY, model_name='gpt-3.5-turbo',verbose=True)
             self.cursor = self.connection.cursor(pymysql.cursors.DictCursor)
         except:
             print('error connect')
