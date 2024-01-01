@@ -5,18 +5,19 @@ from llm.new_ai import new_ai
 history = StreamlitChatMessageHistory(key="chat_messages")
 ai = new_ai()
 
+
 def send_msg(msg, role, save=True):
     with st.chat_message(role):
         st.write(msg)
     # 저장
     if save:
-        st.session_state["msg"].append({"msg": msg, "role": role})
+        st.session_state["msg_003"].append({"msg": msg, "role": role})
 
 
-if "msg" not in st.session_state:
-    st.session_state["msg"] = []
+if "msg_003" not in st.session_state:
+    st.session_state["msg_003"] = []
 
-for msg in st.session_state["msg"]:
+for msg in st.session_state["msg_003"]:
     send_msg(msg["msg"], msg['role'], False)
 
 msg = st.chat_input('Enter the message.')
@@ -27,6 +28,6 @@ if msg:
     history.add_user_message(msg)
     with st.spinner("Waiting for the response..."):
         # ai에 묻기
-        data = ai.translate_msg(msg)
+        data = ai.translate_msg(msg, "English")
         history.add_ai_message(data)
         send_msg(data, "ai")
