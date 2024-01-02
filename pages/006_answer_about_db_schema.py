@@ -5,19 +5,20 @@ from llm.new_ai import new_ai
 history = StreamlitChatMessageHistory(key="chat_messages")
 ai = new_ai()
 
+msg_session_name = "msg_006"
 
 def send_msg(msg, role, save=True):
     with st.chat_message(role):
         st.write(msg)
     # 저장
     if save:
-        st.session_state["msg_006"].append({"msg": msg, "role": role})
+        st.session_state[msg_session_name].append({"msg": msg, "role": role})
 
 
-if "msg_006" not in st.session_state:
-    st.session_state["msg_006"] = []
+if msg_session_name not in st.session_state:
+    st.session_state[msg_session_name] = []
 
-for msg in st.session_state["msg_006"]:
+for msg in st.session_state[msg_session_name]:
     send_msg(msg["msg"], msg['role'], False)
 
 msg = st.chat_input('Enter the message.')
