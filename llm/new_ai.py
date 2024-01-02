@@ -83,3 +83,32 @@ class new_ai:
         except Exception as e:
             logging.warning(e)
             return 'Error: fail to create a query'
+
+    # Ai가 DB 관련 질문에 적절한 답변 만드는 함수
+    def answer_about_schema(self, ask):
+        try:
+            result = []
+
+            # ai가 실행할 행동 정의 (DB 관련 답변 작성)
+            translate = """
+            Based on the table schema below, answer the question:
+            {schema}
+
+            Question: {question}
+            """
+
+            # 정의한 행동 요청 (DB 관련 답변 작성 요청)
+            prompt = ChatPromptTemplate.from_template(translate)
+            response = (
+                RunnablePassthrough.assign(schema=db.get_table_columns)
+                | prompt
+                | self.llm
+            )
+            
+            # 위에 정의한 행동 실행 (DB 관련 답변 작성 실행)
+            result = response.invoke({"question": ask})
+            print(f'answer : ${result}')
+            return result.content
+        except Exception as e:
+            logging.warning(e)
+            return 'Error: fail to answer'
