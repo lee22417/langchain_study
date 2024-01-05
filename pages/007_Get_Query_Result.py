@@ -2,10 +2,10 @@ import streamlit as st
 from langchain.memory import StreamlitChatMessageHistory
 import pandas as pd
 from lib.db import db_info
-from llm.new_ai import new_ai
+from llm.ai_v1 import ai_v1
 
 history = StreamlitChatMessageHistory(key="chat_messages")
-ai = new_ai()
+ai = ai_v1()
 db = db_info()
 
 msg_session_name = "msg_007"

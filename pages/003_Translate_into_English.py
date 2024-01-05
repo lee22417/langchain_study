@@ -1,9 +1,9 @@
 import streamlit as st
 from langchain.memory import StreamlitChatMessageHistory
-from llm.new_ai import new_ai
+from llm.ai_v1 import ai_v1
 
 history = StreamlitChatMessageHistory(key="chat_messages")
-ai = new_ai()
+ai = ai_v1()
 
 msg_session_name = "msg_003"
 

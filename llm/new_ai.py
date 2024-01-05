@@ -16,7 +16,7 @@ from lib.db import db_info
 
 db = db_info()
 
-class new_ai:
+class ai_v1:
     def __init__(self):
         #  Openai information
         OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
@@ -28,8 +28,6 @@ class new_ai:
     # Ai가 질문을 다른 언어로 변역하는 함수
     def translate_msg(self, ask, language):
         try:
-            result = []
-
             # ai가 실행할 행동 정의 (질문을 입력한 언어로 번역하기)
             translate = """
             Translate the incoming Question into the language below as accurate as possible.
@@ -57,8 +55,6 @@ class new_ai:
     # Ai가 질문에 적절한 쿼리문 만드는 함수
     def create_query(self, ask):
         try:
-            result = []
-
             # ai가 실행할 행동 정의 (쿼리문 작성)
             translate = """
             Based on the table schema below, write a SQL query that would answer the question:
@@ -87,8 +83,6 @@ class new_ai:
     # Ai가 DB 관련 질문에 적절한 답변 만드는 함수
     def answer_about_schema(self, ask):
         try:
-            result = []
-
             # ai가 실행할 행동 정의 (DB 관련 답변 작성)
             translate = """
             Based on the table schema below, answer the question:
