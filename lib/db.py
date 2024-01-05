@@ -27,6 +27,14 @@ class db_info:
         cursor.close()
         return result
 
+    # DB 쿼리 실행 함수 dict
+    def run_query_dict(self, query):
+        cursor = self.connection.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+    
     # DB 스키마 가져오는 함수
     def get_schema(self, _):
         sql = """
@@ -39,13 +47,13 @@ class db_info:
         """
         result = self.run_query(sql)
         return result
-    
-    # 테이블 정보 가져오는 함수
+
+    # 모든 테이블 정보 가져오는 함수
     def get_table_columns(self, _):
         # 토큰 용량과 타협
         sql = """
             SELECT 
-                TABLE_NAME, COLUMN_NAME, LEFT(COLUMN_COMMENT, 30)
+                TABLE_NAME, COLUMN_NAME, LEFT(COLUMN_COMMENT, 10)
             FROM 
                 INFORMATION_SCHEMA.COLUMNS
             WHERE 
@@ -54,12 +62,28 @@ class db_info:
         # 토큰 용량이 커서 사용 못하는 sql문
         # This model's maximum context length is 4097 tokens. However, your messages resulted in 6032 tokens
         # sql = """
-        #     SELECT 
+        #     SELECT
         #         TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
-        #     FROM 
+        #     FROM
         #         INFORMATION_SCHEMA.COLUMNS
-        #     WHERE 
+        #     WHERE
         #         TABLE_SCHEMA = 'hairdb'
         # """
+        result = self.run_query(sql)
+        return result
+
+    # 해당 테이블들 정보 가져오는 함수
+    def get_table_columns_by_table_name(self, table_names):
+        print(type(table_names))
+        sql = f"""
+            SELECT 
+                TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
+            FROM 
+                INFORMATION_SCHEMA.COLUMNS
+            WHERE 
+                TABLE_SCHEMA = 'hairdb' AND TABLE_NAME IN ({table_names});
+        """
+        # error : WARNING:root:Expected a Runnable, callable or dict.Instead got an unsupported type: <class 'tuple'>
+        print(f'!! {sql}')
         result = self.run_query(sql)
         return result

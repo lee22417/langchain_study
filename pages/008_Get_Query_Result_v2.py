@@ -2,17 +2,17 @@ import streamlit as st
 from langchain.memory import StreamlitChatMessageHistory
 import pandas as pd
 from lib.db import db_info
-from llm.ai_v1 import ai_v1
+from llm.ai_v2 import ai_v2
 
 history = StreamlitChatMessageHistory(key="chat_messages")
-ai = ai_v1()
+ai = ai_v2()
 db = db_info()
 
 st.set_page_config(
-    page_icon="1️⃣",
+    page_icon="2️⃣",
 )
 
-msg_session_name = "msg_007"
+msg_session_name = "msg_008"
 
 def send_msg(msg, role, save=True):
     with st.chat_message(role):

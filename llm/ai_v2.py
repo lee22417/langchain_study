@@ -16,8 +16,12 @@ from lib.db import db_info
 
 db = db_info()
 
+# 토큰 용량 제한으로, 모든 테이블의 컬럼 정보를 못 보냄
+# 먼저 관련 테이블들을 선택하고 해당 테이블의 컬럼 정보만 보내서 sql 생성
+# This model's maximum context length is 4097 tokens. However, your messages resulted in 6032 tokens
 
-class ai_v1:
+
+class ai_v2:
     def __init__(self):
         #  Openai information
         OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
@@ -26,35 +30,36 @@ class ai_v1:
                                   # ChatCallbackHandler(),
                               ],)
 
-    # Ai가 질문을 다른 언어로 변역하는 함수
-    def translate_msg(self, ask, language):
+    # Ai가 질문에 적절한 테이블을 선택하는 함수
+    def select_table(self, ask):
         try:
-            # ai가 실행할 행동 정의 (질문을 입력한 언어로 번역하기)
+            # ai가 실행할 행동 정의 (테이블을 선택)
             translate = """
-            Translate the incoming Question into the language below as accurate as possible.
-            {language}
-            
+            Based on the table schema below, choose the tables that would be used to answer the question:
+            {schema}
+
             Question: {question}
+            Tables:
             """
 
-            # 정의한 행동 요청 (질문을 입력한 언어로 번역 요청)
-            translate_prompt = ChatPromptTemplate.from_template(translate)
-            translate_response = (
-                translate_prompt
+            # 정의한 행동 요청 (테이블을 선택)
+            prompt = ChatPromptTemplate.from_template(translate)
+            response = (
+                RunnablePassthrough.assign(schema=db.get_schema)
+                | prompt
                 | self.llm
             )
 
-            # 위에 정의한 행동 실행 (질문을 입력한 언어로 번역 실행)
-            result = translate_response.invoke(
-                {"question": ask, "language": language})
-            print(f'convert to eng : ${result}')
+            # 위에 정의한 행동 실행 (테이블을 선택 실행)
+            result = response.invoke({"question": ask})
+            print(f'table names : ${result}')
             return result.content
         except Exception as e:
             logging.warning(e)
-            return 'Error: fail to translate to '+language
+            return 'Error: fail to create a query'
 
-    # Ai가 질문에 적절한 쿼리문 만드는 함수
-    def create_query(self, ask):
+    # Ai가 질문에 입력된 테이블들로 적절한 쿼리문 만드는 함수
+    def create_query_w_entered_table_name(self, ask, table_names):
         try:
             # ai가 실행할 행동 정의 (쿼리문 작성)
             translate = """
@@ -68,7 +73,8 @@ class ai_v1:
             # 정의한 행동 요청 (쿼리문 작성 요청)
             prompt = ChatPromptTemplate.from_template(translate)
             response = (
-                RunnablePassthrough.assign(schema=db.get_table_columns)
+                RunnablePassthrough.assign(
+                    schema=db.get_table_columns_by_table_name(table_names))
                 | prompt
                 | self.llm
             )
@@ -81,29 +87,20 @@ class ai_v1:
             logging.warning(e)
             return 'Error: fail to create a query'
 
-    # Ai가 DB 관련 질문에 적절한 답변 만드는 함수
-    def answer_about_schema(self, ask):
+    # Ai가 질문에 적절한 쿼리문 만드는 함수
+    def create_query(self, ask):
         try:
-            # ai가 실행할 행동 정의 (DB 관련 답변 작성)
-            translate = """
-            Based on the table schema below, answer the question:
-            {schema}
-
-            Question: {question}
-            """
-
-            # 정의한 행동 요청 (DB 관련 답변 작성 요청)
-            prompt = ChatPromptTemplate.from_template(translate)
-            response = (
-                RunnablePassthrough.assign(schema=db.get_table_columns)
-                | prompt
-                | self.llm
-            )
-
-            # 위에 정의한 행동 실행 (DB 관련 답변 작성 실행)
-            result = response.invoke({"question": ask})
-            print(f'answer : ${result}')
-            return result.content
+            table_names = str(self.select_table(ask)).split(',')
+            table_names_str = """"""
+            for i in range(len(table_names)):
+                table_name_fixed = table_names[i].replace("(", "").replace("'", "").replace(")", "").replace(' ','')
+                if table_name_fixed != '':
+                    if i != 0:
+                        table_names_str += ","
+                    table_names_str += f"'{table_name_fixed}'"
+            result = self.create_query_w_entered_table_name(
+                ask, table_names_str)
+            return result
         except Exception as e:
             logging.warning(e)
-            return 'Error: fail to answer'
+            return 'Error: fail to create a query'
