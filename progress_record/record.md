@@ -42,5 +42,17 @@
 ## 20240106
 
 ```bash
-TODO: 사용자 질문, ai 생성 sql -> DB 테이블에 저장 (log 기록)
+사용자 질문, ai 생성 sql -> DB 테이블에 저장 (log 기록)
+> 질문과 sql이 일치하는지 확인하는게 좋을 듯
+```
+
+```bash
+SELECT
+    TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
+FROM
+    INFORMATION_SCHEMA.COLUMNS
+WHERE
+    TABLE_SCHEMA = 'hairdb' AND TABLE_NAME IN ('restaurant');
+> WARNING:root:Expected a Runnable, callable or dict.Instead got an unsupported type: <class 'tuple'>
+왜 이 에러가 나는지 모르겠음. 파이썬은 천천히 해야겠다..
 ```
