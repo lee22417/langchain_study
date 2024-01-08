@@ -56,10 +56,10 @@ class ai_v2:
             return result.content
         except Exception as e:
             logging.warning(e)
-            return 'Error: fail to create a query'
+            return 'Error: fail to select tables'
 
     # Ai가 질문에 입력된 테이블들로 적절한 쿼리문 만드는 함수
-    def create_query_w_entered_table_name(self, ask, table_names):
+    def create_query_w_selected_table_name(self, ask):
         try:
             # ai가 실행할 행동 정의 (쿼리문 작성)
             translate = """
@@ -74,7 +74,7 @@ class ai_v2:
             prompt = ChatPromptTemplate.from_template(translate)
             response = (
                 RunnablePassthrough.assign(
-                    schema=db.get_table_columns_by_table_name(table_names))
+                    schema=db.get_table_columns_by_table_name)
                 | prompt
                 | self.llm
             )
@@ -90,17 +90,26 @@ class ai_v2:
     # Ai가 질문에 적절한 쿼리문 만드는 함수
     def create_query(self, ask):
         try:
-            table_names = str(self.select_table(ask)).split(',')
-            table_names_str = """"""
-            for i in range(len(table_names)):
-                table_name_fixed = table_names[i].replace("(", "").replace("'", "").replace(")", "").replace(' ','')
-                if table_name_fixed != '':
-                    if i != 0:
-                        table_names_str += ","
-                    table_names_str += f"'{table_name_fixed}'"
-            result = self.create_query_w_entered_table_name(
-                ask, table_names_str)
+            # 질문과 관련된 DB 테이블 이름 가져오기
+            table_names = self.select_table(ask)
+            table_names_str = self.format_tuple_to_string(table_names)
+            # DB 테이블 이름을 db.self에 저장
+            db.set_table_names(table_names_str)
+            # 위의 DB 테이블 정보로 쿼리 생성
+            result = self.create_query_w_selected_table_name(ask)
             return result
         except Exception as e:
             logging.warning(e)
             return 'Error: fail to create a query'
+
+    # format from tuple to string 
+    def format_tuple_to_string(self, tuple_input):
+        input_arr = str(tuple_input).split(',')
+        result = """"""
+        for i in range(len(input_arr)):
+            element_fixed = input_arr[i].replace("(", "").replace("'", "").replace(")", "").replace(' ','')
+            if element_fixed != '':
+                if i != 0:
+                    result += ","
+                result += f"'{element_fixed}'"
+        return result;

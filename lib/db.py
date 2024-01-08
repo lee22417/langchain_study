@@ -73,17 +73,18 @@ class db_info:
         return result
 
     # 해당 테이블들 정보 가져오는 함수
-    def get_table_columns_by_table_name(self, table_names):
-        print(type(table_names))
+    def get_table_columns_by_table_name(self, _):
         sql = f"""
             SELECT 
                 TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
             FROM 
                 INFORMATION_SCHEMA.COLUMNS
             WHERE 
-                TABLE_SCHEMA = 'hairdb' AND TABLE_NAME IN ({table_names});
+                TABLE_SCHEMA = 'hairdb' AND TABLE_NAME IN ({self.table_names});
         """
-        # error : WARNING:root:Expected a Runnable, callable or dict.Instead got an unsupported type: <class 'tuple'>
-        print(f'!! {sql}')
         result = self.run_query(sql)
         return result
+
+    # self에 table name set 함수
+    def set_table_names(self, table_names):
+        self.table_names = table_names
