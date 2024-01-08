@@ -19,9 +19,17 @@ class db_info:
             database=DATABASE
         )
 
-    # DB 쿼리 실행 함수
+    # DB 쿼리 실행 함수 tuple
     def run_query(self, query):
         cursor = self.connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+    
+    # DB 쿼리 실행 함수 dict
+    def run_query_dict(self, query):
+        cursor = self.connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()

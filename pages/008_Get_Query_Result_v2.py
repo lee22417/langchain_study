@@ -38,7 +38,7 @@ if msg:
         # 영어 질문에 맞는 쿼리문 생성
         query = ai.create_query(msg)
         # 쿼리문 실행
-        data = db.run_query(query)
+        data = db.run_query_dict(query)
         data = pd.DataFrame(data)
         print(data)
         # 출력
