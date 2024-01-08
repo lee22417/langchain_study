@@ -47,12 +47,21 @@
 ```
 
 ```bash
-SELECT
-    TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
-FROM
-    INFORMATION_SCHEMA.COLUMNS
-WHERE
-    TABLE_SCHEMA = 'hairdb' AND TABLE_NAME IN ('restaurant');
 > WARNING:root:Expected a Runnable, callable or dict.Instead got an unsupported type: <class 'tuple'>
-왜 이 에러가 나는지 모르겠음. 파이썬은 천천히 해야겠다..
+왜 이 에러가 나는지 모르겠음.
+
+>>>
+RunnablePassthrough.assign(schema={})
+위의 {}부분에 tuple을 넣어서 생긴 오류였다.
+<bound method db_info.get_table_columns_by_table_name of <lib.db.db_info object at 어쩌구>>
+로 수정하여 해결
+```
+
+## 20240108
+
+```bash
+쿼리 생성 로그 기록 DB 테이블을 만들면 좋을듯
+columns : 질문, ai가 생성한 쿼리, 쿼리 맞는지 틀린지 여부, (틀렸다면) 맞는 쿼리
+
+위 테이블을 만들어서 나중에 ai 정확도에 쓸 수도..?
 ```
