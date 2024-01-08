@@ -61,7 +61,7 @@ class db_info:
         # 토큰 용량과 타협
         sql = """
             SELECT 
-                TABLE_NAME, COLUMN_NAME, LEFT(COLUMN_COMMENT, 10)
+                TABLE_NAME, COLUMN_NAME
             FROM 
                 INFORMATION_SCHEMA.COLUMNS
             WHERE 
@@ -84,7 +84,7 @@ class db_info:
     def get_table_columns_by_table_name(self, _):
         sql = f"""
             SELECT 
-                TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
+                TABLE_NAME, COLUMN_NAME, COLUMN_TYPE
             FROM 
                 INFORMATION_SCHEMA.COLUMNS
             WHERE 
