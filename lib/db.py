@@ -47,7 +47,7 @@ class db_info:
     def get_schema(self, _):
         sql = """
             SELECT 
-                TABLE_NAME, TABLE_COMMENT
+                TABLE_NAME
             FROM
                 INFORMATION_SCHEMA.TABLES
             WHERE
