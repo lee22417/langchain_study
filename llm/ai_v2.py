@@ -1,14 +1,7 @@
 import streamlit as st
-from langchain.utilities import SQLDatabase
-from langchain_experimental.sql import SQLDatabaseChain
-from langchain.chains import create_sql_query_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain.schema import HumanMessage, SystemMessage
-from langchain.prompts.chat import HumanMessagePromptTemplate
-import pandas as pd
 import logging
 
 from lib.db import db_info

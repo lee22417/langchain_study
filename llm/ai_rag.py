@@ -6,7 +6,6 @@ from langchain.storage import LocalFileStore
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores.faiss import FAISS
 from langchain.chat_models import ChatOpenAI
-# from llm.llmcallback import ChatCallbackHandler
 
 class ai_file:
     def __init__(self):
